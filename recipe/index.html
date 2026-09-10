@@ -7,6 +7,11 @@
 <meta name="robots" content="noindex">
 <meta property="og:title" content="A recipe shared with you">
 <meta property="og:description" content="Open it in Nombook and keep your own copy.">
+<!-- Apple's own Smart App Banner. This is the only *real* installed-or-not
+     detection available to a web page: iOS decides, and shows OPEN when the app
+     is present and VIEW when it is not. Nothing in JavaScript can ask that
+     question. The numeric id is Nombook's own, 6792402315. -->
+<meta name="apple-itunes-app" content="app-id=6792402315">
 <style>
   /* The same three tokens as the rest of the site. */
   :root { --paper:#F5EEE1; --ink:#3A342B; --accent:#C7794F; --muted:#7a7161; }
@@ -43,11 +48,12 @@
        there is a real token to point at, so the button is never a dead link. -->
   <a id="open" class="btn primary" style="display:none" href="#">Open in Nombook</a>
 
-  <!-- TODO before publishing: replace APPLE_ID with the numeric Apple ID from
-       App Store Connect → App Information → General Information → Apple ID. -->
-  <a class="btn secondary" href="https://apps.apple.com/app/idAPPLE_ID">Get Nombook — it's free</a>
+  <a id="store" class="btn secondary" href="https://apps.apple.com/app/id6792402315">Get Nombook — it's free</a>
 
   <p id="broken">That link looks incomplete. Ask whoever sent it to share the recipe again.</p>
+
+  <p id="status" style="display:none">Taking you to the App Store…
+    <a id="stay" class="plain" href="#">stay here</a></p>
 
   <p class="note">Nombook is a private recipe diary for iPhone. The recipe becomes
   <strong>yours</strong> — your own copy, which later changes by the sender don't touch.</p>
@@ -59,30 +65,74 @@
 <script>
   // The last path segment is the CloudKit share token: nombook.app/recipe/<token>.
   //
-  // **Why this page rebuilds the iCloud address instead of just existing.**
-  // With the Associated Domains entitlement live and Apple's file fetched, a
-  // phone that has Nombook never gets here at all — iOS opens the app straight
-  // from the link. This page is what the *other* cases see: no app installed,
-  // a desktop browser, or the window between shipping a build and Apple having
-  // verified the site.
+  // **What this page is for, and why it mostly is not seen.** With the
+  // Associated Domains entitlement live and Apple's file fetched, a phone that
+  // has Nombook never arrives here — iOS opens the app straight from the link.
+  // So the visitors are, overwhelmingly, people without the app: plus a desktop
+  // browser, and the narrow cases where universal links do not fire (a URL
+  // pasted into the address bar, some in-app browsers).
   //
-  // That last case is the reason for the button. `https://www.icloud.com/share/<token>`
-  // is the address CloudKit itself minted, and iOS hands it to Nombook through
-  // `CKSharingSupported` with no help from this domain — so the link works even
-  // if the Universal Link half is not set up yet, or has broken. It is one
-  // extra tap, and it is never a dead end.
+  // **A page cannot detect whether an app is installed.** Browsers do not
+  // expose it, and the usual trick — fire a custom scheme, start a timer, send
+  // them to the App Store if the page is still here — is a guess that lands
+  // people in the wrong place when it is wrong, and on iOS is unreliable
+  // besides: scripted navigation to a universal link does not open an app at
+  // all, only a real tap does.
+  //
+  // So there is no guessing. On a phone this goes to the App Store by itself,
+  // which is the right destination for almost everyone who gets here **and is
+  // still right for the rest**: the App Store shows OPEN, not GET, when the app
+  // is already installed. Apple's Smart App Banner above says the same thing
+  // more directly, and both are iOS answering the question rather than us.
   (function () {
     var parts = window.location.pathname.split('/').filter(Boolean);
     var token = parts.length > 1 ? parts[parts.length - 1] : '';
-    // Share tokens are URL-safe base64-ish. Anything else is a mistyped or
-    // truncated link, and offering to open it would just fail in the app.
-    if (/^[A-Za-z0-9_-]{6,}$/.test(token)) {
-      var open = document.getElementById('open');
-      open.href = 'https://www.icloud.com/share/' + encodeURIComponent(token);
-      open.style.display = 'block';
-    } else {
+    var open = document.getElementById('open');
+
+    // Share tokens are URL-safe base64. Anything else is a truncated or
+    // mistyped link, and offering to open it would only fail in the app.
+    if (!/^[A-Za-z0-9_-]{6,}$/.test(token)) {
       document.getElementById('broken').style.display = 'block';
+      document.getElementById('store').style.display = 'none';
+      return;
     }
+
+    // `https://www.icloud.com/share/<token>` is the address CloudKit itself
+    // minted, and iOS hands it to Nombook through CKSharingSupported with no
+    // help from this domain. That is what makes the button work even if the
+    // Universal Link half is not set up yet, or has broken.
+    open.href = 'https://www.icloud.com/share/' + encodeURIComponent(token);
+    open.style.display = 'block';
+
+    var store = document.getElementById('store');
+    var storeURL = store.getAttribute('href');
+
+    // **Guard: never auto-send anyone to a placeholder.** Until the numeric
+    // Apple ID is filled in, that URL is a 404, and redirecting to it would be
+    // strictly worse than showing the page. The manual buttons still work.
+    if (storeURL.indexOf('APPLE_ID') !== -1) return;
+
+    // Phones only. A desktop browser cannot install anything, so sending it to
+    // the App Store would be a dead end rather than a shortcut.
+    if (!/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) return;
+
+    var status = document.getElementById('status');
+    status.style.display = 'block';
+    var timer = setTimeout(function () { window.location.replace(storeURL); }, 1600);
+
+    // Anything the visitor does themselves wins. Tapping Open in Nombook, or
+    // simply leaving, must not be followed by the App Store opening underneath
+    // them a moment later.
+    function cancel() { clearTimeout(timer); status.style.display = 'none'; }
+    open.addEventListener('click', cancel);
+    store.addEventListener('click', cancel);
+    document.getElementById('stay').addEventListener('click', function (e) {
+      e.preventDefault(); cancel();
+    });
+    document.addEventListener('visibilitychange', function () {
+      if (document.hidden) cancel();
+    });
+    window.addEventListener('pagehide', cancel);
   })();
 </script>
 </body>
