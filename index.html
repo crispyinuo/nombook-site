@@ -7,13 +7,36 @@
 <meta name="description" content="A cozy little recipe diary for iPhone. Write down what you cook, log every time you make it, and keep it all private.">
 <link rel="canonical" href="https://nombook.app/">
 <meta property="og:type" content="website">
+<meta property="og:site_name" content="Nombook">
 <meta property="og:title" content="Nombook — your own little cookbook">
 <meta property="og:description" content="A cozy little recipe diary for iPhone. No accounts, no ads, no tracking.">
 <meta property="og:url" content="https://nombook.app/">
+<!-- The card iMessage, WhatsApp and the rest unfurl this link into. It has to
+     be an absolute URL — a relative one is simply dropped by most of them —
+     and the width/height let a preview reserve the right shape before the
+     image has finished loading. -->
+<meta property="og:image" content="https://nombook.app/assets/og.png">
+<meta property="og:image:type" content="image/png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="The Nombook logo: a bowl and an open book drawn in one line.">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="/favicon.ico" sizes="48x48">
+<link rel="icon" type="image/png" href="/assets/icon-32.png" sizes="32x32">
+<link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+<meta name="theme-color" content="#F5EEE1">
 <style>
   /* Same three tokens as support.html and privacy.html, so the site reads as
      one thing. If the app's palette changes, change it in all three. */
   :root { --paper:#F5EEE1; --ink:#3A342B; --accent:#C7794F; --muted:#7a7161; }
+  /* Handlee is the face the app sets the "nombook" wordmark in, in every
+     language, so the site sets the wordmark in it too. Served from here
+     rather than from a font CDN: a page that promises no tracking should not
+     hand a third party a request for every visit. OFL, licence beside it. */
+  @font-face {
+    font-family:"Handlee"; src:url("./assets/handlee-regular.ttf") format("truetype");
+    font-weight:400; font-style:normal; font-display:swap;
+  }
   * { box-sizing:border-box; }
   body {
     margin:0; padding:3.5rem 1.25rem 5rem;
@@ -22,8 +45,17 @@
   }
   main { max-width:42rem; margin:0 auto; }
   header { text-align:center; margin-bottom:3rem; }
-  h1 { font-size:2.6rem; line-height:1.1; margin:0 0 .5rem; letter-spacing:-.01em; }
-  .tagline { color:var(--muted); font-size:1.2rem; margin:0 0 2rem; }
+  /* Mark and wordmark side by side, the same lockup the app's Kitchen header
+     draws. The app pairs a 76pt mark with a 40pt wordmark; the sizes below
+     keep that ratio, which is why the wordmark's number looks so large —
+     Handlee's letters only fill about half of their em box. */
+  .lockup { display:flex; align-items:center; justify-content:center; gap:.5rem; }
+  .lockup img { height:96px; width:auto; }
+  h1 {
+    font-family:"Handlee",-apple-system,BlinkMacSystemFont,sans-serif;
+    font-size:3.1rem; line-height:1; margin:0;
+  }
+  .tagline { color:var(--muted); font-size:1.2rem; margin:.75rem 0 2rem; }
   .cta {
     display:inline-block; background:var(--accent); color:#fff; text-decoration:none;
     font-weight:600; padding:.85rem 1.75rem; border-radius:999px;
@@ -43,7 +75,10 @@
 <main>
 
 <header>
-  <h1>nombook</h1>
+  <div class="lockup">
+    <img src="./assets/nombook-mark.png" width="314" height="320" alt="">
+    <h1>nombook</h1>
+  </div>
   <p class="tagline">your own little cookbook</p>
   <a class="cta" href="https://apps.apple.com/app/id6792402315">Get it on the App Store</a>
 </header>

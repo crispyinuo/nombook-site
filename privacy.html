@@ -4,8 +4,31 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Nombook — Privacy Policy</title>
+<meta name="description" content="Nombook collects nothing. No accounts, no servers of ours, no analytics, no ads and no tracking.">
+<link rel="canonical" href="https://nombook.app/privacy.html">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Nombook">
+<meta property="og:title" content="Nombook — Privacy Policy">
+<meta property="og:description" content="Nombook collects nothing. No accounts, no servers of ours, no analytics, no ads and no tracking.">
+<meta property="og:url" content="https://nombook.app/privacy.html">
+<!-- Absolute, or the preview drops it. See index.html. -->
+<meta property="og:image" content="https://nombook.app/assets/og.png">
+<meta property="og:image:type" content="image/png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="The Nombook logo: a bowl and an open book drawn in one line.">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="/favicon.ico" sizes="48x48">
+<link rel="icon" type="image/png" href="/assets/icon-32.png" sizes="32x32">
+<link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+<meta name="theme-color" content="#F5EEE1">
 <style>
   :root { --paper:#F5EEE1; --ink:#3A342B; --accent:#C7794F; }
+  /* Handlee, self-hosted, is the wordmark face — see index.html. */
+  @font-face {
+    font-family:"Handlee"; src:url("./assets/handlee-regular.ttf") format("truetype");
+    font-weight:400; font-style:normal; font-display:swap;
+  }
   * { box-sizing:border-box; }
   body {
     margin:0; padding:2.5rem 1.25rem 5rem;
@@ -13,6 +36,16 @@
     font:17px/1.65 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
   }
   main { max-width:42rem; margin:0 auto; }
+  /* Small brand lockup, and the only route back to the home page from here. */
+  .home {
+    display:inline-flex; align-items:center; gap:.4rem;
+    text-decoration:none; color:var(--ink); margin-bottom:1.75rem;
+  }
+  .home img { height:44px; width:auto; }
+  .home span {
+    font-family:"Handlee",-apple-system,BlinkMacSystemFont,sans-serif;
+    font-size:1.5rem; line-height:1;
+  }
   h1 { font-size:1.9rem; line-height:1.2; margin:0 0 .25rem; }
   h2 { font-size:1.2rem; margin:2.25rem 0 .5rem; }
   .date { color:#7a7161; font-size:.95rem; margin:0 0 2rem; }
@@ -26,6 +59,8 @@
 </head>
 <body>
 <main>
+
+<a class="home" href="./"><img src="./assets/nombook-mark.png" width="314" height="320" alt=""><span>nombook</span></a>
 
 <h1>Nombook Privacy Policy</h1>
 <p class="date">Last updated: 9 September 2026</p>
