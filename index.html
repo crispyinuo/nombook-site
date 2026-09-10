@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Nombook — your own little cookbook</title>
+<meta name="description" content="A cozy little recipe diary for iPhone. Write down what you cook, log every time you make it, and keep it all private.">
+<link rel="canonical" href="https://nombook.app/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Nombook — your own little cookbook">
+<meta property="og:description" content="A cozy little recipe diary for iPhone. No accounts, no ads, no tracking.">
+<meta property="og:url" content="https://nombook.app/">
+<style>
+  /* Same three tokens as support.html and privacy.html, so the site reads as
+     one thing. If the app's palette changes, change it in all three. */
+  :root { --paper:#F5EEE1; --ink:#3A342B; --accent:#C7794F; --muted:#7a7161; }
+  * { box-sizing:border-box; }
+  body {
+    margin:0; padding:3.5rem 1.25rem 5rem;
+    background:var(--paper); color:var(--ink);
+    font:17px/1.65 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  }
+  main { max-width:42rem; margin:0 auto; }
+  header { text-align:center; margin-bottom:3rem; }
+  h1 { font-size:2.6rem; line-height:1.1; margin:0 0 .5rem; letter-spacing:-.01em; }
+  .tagline { color:var(--muted); font-size:1.2rem; margin:0 0 2rem; }
+  .cta {
+    display:inline-block; background:var(--accent); color:#fff; text-decoration:none;
+    font-weight:600; padding:.85rem 1.75rem; border-radius:999px;
+    border:1.5px solid var(--ink);
+  }
+  .cta:hover { filter:brightness(.95); }
+  h2 { font-size:1.2rem; margin:2.5rem 0 .5rem; }
+  .card { border:1.5px solid var(--ink); border-radius:14px; padding:1rem 1.15rem; background:#fffaf0; }
+  ul { padding-left:1.15rem; }
+  li { margin:.4rem 0; }
+  a { color:var(--accent); }
+  .links { display:flex; gap:1.5rem; flex-wrap:wrap; margin-top:.5rem; }
+  footer { margin-top:3.5rem; padding-top:1.25rem; border-top:1.5px solid rgba(58,52,43,.25); color:var(--muted); font-size:.95rem; }
+</style>
+</head>
+<body>
+<main>
+
+<header>
+  <h1>nombook</h1>
+  <p class="tagline">your own little cookbook</p>
+  <!-- TODO before publishing: replace APPLE_ID with the numeric Apple ID from
+       App Store Connect → App Information → General Information → Apple ID.
+       Until then this link 404s, which is why it is loud rather than plausible. -->
+  <a class="cta" href="https://apps.apple.com/app/idAPPLE_ID">Get it on the App Store</a>
+</header>
+
+<div class="card">
+  <p>Nombook is a recipe <strong>diary</strong>. Write down the dishes you actually
+  cook — a photo or one of the hand-drawn covers, the ingredients, the steps —
+  then log each time you make it and how it turned out.</p>
+  <p>It is not a discovery app and it is not a social network. It is your
+  cookbook, kept on your phone.</p>
+</div>
+
+<h2>What it does</h2>
+<ul>
+  <li><strong>Write a recipe</strong> by hand, from a photo of a cookbook page, from a pasted block of text, or from a link.</li>
+  <li><strong>Cook from it</strong> in a full-screen mode that keeps the screen awake, with a timer on any step that needs one.</li>
+  <li><strong>Keep a diary</strong> — every cook, with a star rating, a note and photos of how it came out.</li>
+  <li><strong>Plan the week</strong> and build a shopping list from the ingredients.</li>
+  <li><strong>Find something to cook</strong> from what is actually in the fridge.</li>
+  <li><strong>Send a recipe to a friend</strong> as a link. They keep their own copy.</li>
+</ul>
+
+<h2>Private by default</h2>
+<div class="card">
+  <p>No accounts, no sign-up, no password. No ads, no subscriptions, no tracking.
+  There is no Nombook server: your cookbook lives on your iPhone, and — if you
+  leave iCloud Sync on — in <em>your</em> private iCloud, which we cannot read.</p>
+  <p>Read the <a href="./privacy.html">privacy policy</a>.</p>
+</div>
+
+<h2>Languages</h2>
+<p>English, 简体中文, 繁體中文, 日本語, 한국어, Español and Français. By default it follows your phone.</p>
+
+<h2>Requirements</h2>
+<p>iPhone running iOS 17 or later.</p>
+
+<h2>Help</h2>
+<p class="links">
+  <a href="./support.html">Help &amp; support</a>
+  <a href="./privacy.html">Privacy policy</a>
+  <a href="mailto:nombooksupport@gmail.com">nombooksupport@gmail.com</a>
+</p>
+
+<footer>Nombook is made by Yinuo Zhou.</footer>
+
+</main>
+</body>
+</html>

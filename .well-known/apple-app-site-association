@@ -1,0 +1,15 @@
+{
+  "applinks": {
+    "details": [
+      {
+        "appIDs": ["GJW3JH36GW.com.yinuozhou.nombook"],
+        "components": [
+          {
+            "/": "/recipe/*",
+            "comment": "Shared recipe links. Everything else on nombook.app stays in the browser."
+          }
+        ]
+      }
+    ]
+  }
+}

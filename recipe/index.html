@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>A recipe shared with you — Nombook</title>
+<meta name="robots" content="noindex">
+<meta property="og:title" content="A recipe shared with you">
+<meta property="og:description" content="Open it in Nombook and keep your own copy.">
+<style>
+  /* The same three tokens as the rest of the site. */
+  :root { --paper:#F5EEE1; --ink:#3A342B; --accent:#C7794F; --muted:#7a7161; }
+  * { box-sizing:border-box; }
+  body {
+    margin:0; padding:4rem 1.25rem 5rem; text-align:center;
+    background:var(--paper); color:var(--ink);
+    font:17px/1.65 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  }
+  main { max-width:26rem; margin:0 auto; }
+  h1 { font-size:1.7rem; line-height:1.25; margin:0 0 .5rem; }
+  p  { color:var(--muted); margin:0 0 2rem; }
+  .btn {
+    display:block; text-decoration:none; font-weight:600;
+    padding:.85rem 1.5rem; border-radius:999px; border:1.5px solid var(--ink);
+    margin:0 auto .75rem; max-width:20rem;
+  }
+  .primary  { background:var(--accent); color:#fff; }
+  .secondary{ background:#fffaf0; color:var(--ink); }
+  .btn:hover { filter:brightness(.97); }
+  .note { font-size:.9rem; margin-top:2rem; }
+  footer { margin-top:3rem; color:var(--muted); font-size:.9rem; }
+  a.plain { color:var(--accent); }
+  #broken { display:none; }
+</style>
+</head>
+<body>
+<main>
+
+  <h1>A recipe, shared with you</h1>
+  <p>Open it in Nombook and keep your own copy of it.</p>
+
+  <!-- Rebuilt from the address bar by the script below. It stays hidden until
+       there is a real token to point at, so the button is never a dead link. -->
+  <a id="open" class="btn primary" style="display:none" href="#">Open in Nombook</a>
+
+  <!-- TODO before publishing: replace APPLE_ID with the numeric Apple ID from
+       App Store Connect → App Information → General Information → Apple ID. -->
+  <a class="btn secondary" href="https://apps.apple.com/app/idAPPLE_ID">Get Nombook — it's free</a>
+
+  <p id="broken">That link looks incomplete. Ask whoever sent it to share the recipe again.</p>
+
+  <p class="note">Nombook is a private recipe diary for iPhone. The recipe becomes
+  <strong>yours</strong> — your own copy, which later changes by the sender don't touch.</p>
+
+  <footer><a class="plain" href="/">nombook.app</a></footer>
+
+</main>
+
+<script>
+  // The last path segment is the CloudKit share token: nombook.app/recipe/<token>.
+  //
+  // **Why this page rebuilds the iCloud address instead of just existing.**
+  // With the Associated Domains entitlement live and Apple's file fetched, a
+  // phone that has Nombook never gets here at all — iOS opens the app straight
+  // from the link. This page is what the *other* cases see: no app installed,
+  // a desktop browser, or the window between shipping a build and Apple having
+  // verified the site.
+  //
+  // That last case is the reason for the button. `https://www.icloud.com/share/<token>`
+  // is the address CloudKit itself minted, and iOS hands it to Nombook through
+  // `CKSharingSupported` with no help from this domain — so the link works even
+  // if the Universal Link half is not set up yet, or has broken. It is one
+  // extra tap, and it is never a dead end.
+  (function () {
+    var parts = window.location.pathname.split('/').filter(Boolean);
+    var token = parts.length > 1 ? parts[parts.length - 1] : '';
+    // Share tokens are URL-safe base64-ish. Anything else is a mistyped or
+    // truncated link, and offering to open it would just fail in the app.
+    if (/^[A-Za-z0-9_-]{6,}$/.test(token)) {
+      var open = document.getElementById('open');
+      open.href = 'https://www.icloud.com/share/' + encodeURIComponent(token);
+      open.style.display = 'block';
+    } else {
+      document.getElementById('broken').style.display = 'block';
+    }
+  })();
+</script>
+</body>
+</html>

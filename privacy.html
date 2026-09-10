@@ -28,15 +28,15 @@
 <main>
 
 <h1>Nombook Privacy Policy</h1>
-<p class="date">Last updated: 14 August 2026</p>
+<p class="date">Last updated: 9 September 2026</p>
 
-<p>Nombook is a recipe diary that runs entirely on your device. This policy explains what that means in practice.</p>
+<p>Nombook is a private recipe diary that stores its working copy on your device and, when iCloud sync is enabled, in your private iCloud database. This policy explains what that means in practice.</p>
 
 <h2>The short version</h2>
-<p class="lede"><strong>Nombook does not collect, transmit, or store any of your personal information.</strong> There are no accounts, no servers of ours, no analytics, no advertising and no third-party tracking of any kind. Your recipes, photos, notes and cooking history stay on your iPhone.</p>
+<p class="lede"><strong>Nombook does not collect your data or send it to us.</strong> There are no Nombook accounts, no servers of ours, no analytics, no advertising and no third-party tracking. Your cookbook stays on your device and, if you leave iCloud sync on, in your private iCloud database. A recipe is shown to somebody else only when you deliberately create and send an iCloud sharing link for it.</p>
 
 <h2>What Nombook stores, and where</h2>
-<p>Everything you create in Nombook is written to storage that belongs to the app on your own device:</p>
+<p>Everything you create in Nombook is written to the app's storage on your own device. When iCloud sync is enabled, the cookbook is also synchronized through Apple CloudKit so that devices signed in to the same Apple Account see the same data:</p>
 <ul>
   <li><strong>Recipes</strong> — titles, ingredients, steps, secret notes, cuisines and dish types</li>
   <li><strong>Photos</strong> — dish covers, step photos, cook-log photos, your profile portrait and recipe-list covers, copied into the app's own folder when you pick or take them</li>
@@ -44,7 +44,12 @@
   <li><strong>Planning and shopping</strong> — planned meals and your grocery list</li>
   <li><strong>Preferences</strong> — the name you chose to be greeted by, your language, and small display settings such as whether the Kitchen shows a grid or a list</li>
 </ul>
-<p>None of this is uploaded anywhere. It is not backed up to any server we operate, because we do not operate one. If your iPhone is set to back itself up to iCloud or to a computer, Nombook's data is included in that backup like any other app's — that backup is between you and Apple, and we have no access to it.</p>
+<p>CloudKit stores synchronized data in the private database belonging to your iCloud account. Apple says private-database data is accessible only to the user by default and is not visible in the developer portal. It counts against your iCloud storage quota. You can turn cookbook sync off in Nombook's iCloud Sync settings; that keeps the local copy and stops this device from making new sync changes after the app restarts. Data already in iCloud remains available to your other devices.</p>
+<p>The app also synchronizes its language preference and your ordered cuisine and dish-type choices through Apple's iCloud key-value store. Nombook does not operate a server and does not receive any of this data.</p>
+
+<h2>Sharing a recipe</h2>
+<p>When you choose <strong>Send a link</strong> or <strong>Copy link</strong>, Nombook uploads a snapshot of that recipe to your private CloudKit database and asks Apple to create a read-only iCloud sharing link. The snapshot can include the recipe title, ingredients, steps, notes, photos, and the profile name you entered in Nombook. Anyone who has the link may be able to read that snapshot, so send it only to people you intend to share it with.</p>
+<p>A recipient who opens the link saves an independent copy in their own cookbook and then leaves the CloudKit share. Later edits do not propagate to that copy. Sending the link again refreshes the snapshot. Deleting the original recipe asks CloudKit to remove its shared snapshot and stops the link from serving it; a copy somebody already saved is not removed.</p>
 
 <h2>Permissions Nombook may ask for</h2>
 <p><strong>Camera.</strong> Optional. Used only when you choose to photograph a dish or scan a recipe from a cookbook page, a recipe card or your own handwriting. Photos you take in Nombook are saved to the app's own folder. Text recognition happens on your device using Apple's Vision framework; no image is sent anywhere. If you decline, everything else in the app continues to work.</p>
@@ -52,9 +57,9 @@
 <p><strong>Notifications.</strong> Optional, and requested only the first time you start a step timer. It exists so a timer can tell you when it's up while you're in another app or your phone is locked. All notifications are created and delivered locally by your device. If you decline, timers still run while Nombook is open, and the app says so on the timer.</p>
 
 <h2>When Nombook uses the network</h2>
-<p>Nombook makes network requests in exactly one situation: <strong>when you ask it to read a recipe from the web.</strong> That happens if you paste a link, or if you use the in-app browser to find a page and save it.</p>
+<p>Nombook uses the network for iCloud sync, recipe-link sharing, and when you ask it to read a recipe from the web. Web access happens if you paste a link or use the in-app browser to find a page and save it.</p>
 <p>In those cases your device contacts that website directly, the same way a web browser would. That website will see the ordinary things any website sees — your IP address, and the request for the page — and its own privacy policy governs what it does with that. Nombook sends nothing about you along with the request, keeps no record of what you visited, and the in-app browser uses a non-persistent session, so its cookies and cache are discarded when you close it.</p>
-<p>There is no other network traffic. Nombook does not phone home, check for messages, or report that it was opened.</p>
+<p>Nombook does not phone home or report that it was opened. It contains no analytics, crash-reporting, advertising, or tracking SDK.</p>
 
 <h2>On-device intelligence</h2>
 <p>On devices that support Apple Intelligence, Nombook may ask Apple's on-device Foundation Models to help make sense of a recipe page or a scanned photo you imported. This runs on your device. The text is not sent to Apple, to us, or to anyone else, and the feature is never required — Nombook falls back to its own parser when no model is available.</p>
@@ -63,15 +68,17 @@
 <p>Nombook is not directed at children and collects no information from anyone, including children.</p>
 
 <h2>Your data is yours</h2>
-<p>Because nothing leaves your device, there is nothing for us to hand over, correct or delete on your behalf — and no way for us to see it in the first place. You are in full control:</p>
+<p>We do not receive your cookbook and cannot view, correct or delete it on your behalf. You are in control through Nombook and your Apple Account:</p>
 <ul>
   <li>Delete a recipe, a photo or a cook log inside the app at any time</li>
-  <li><strong>Deleting Nombook from your iPhone removes all of its data</strong>, including every photo it stored</li>
+  <li>Turn iCloud sync off for this device in Nombook's settings</li>
+  <li>Manage Nombook's iCloud access and stored data through Apple's iCloud settings</li>
+  <li>Delete Nombook to remove its local data and photos from that device</li>
 </ul>
-<p>If you have made a device backup, a copy may remain in that backup until you remove it through your iPhone's settings.</p>
+<p>If iCloud sync was enabled, deleting the app does not by itself delete the private iCloud copy; reinstalling with the same Apple Account can restore it. A copy may also remain in a device backup until you remove that backup through Apple's settings. Copies of recipes that other people already saved from a sharing link belong to those people and are not deleted with your original.</p>
 
 <h2>Changes to this policy</h2>
-<p>If Nombook ever gains a feature that changes any of the above — syncing across your devices, for example — this page will be updated before that feature ships, and the date at the top will change.</p>
+<p>If Nombook gains a feature that changes any of the above, this page will be updated before that feature ships, and the date at the top will change.</p>
 
 <h2>Contact</h2>
 <p>Questions about privacy, or about anything else in Nombook: <a href="mailto:nombooksupport@gmail.com">nombooksupport@gmail.com</a></p>
