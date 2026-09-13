@@ -1,0 +1,278 @@
+/* nombook.app — one stylesheet for index, support and privacy.
+   ------------------------------------------------------------------
+   The palette is the app's own, read straight out of
+   Nombook/Resources/Assets.xcassets/Colors. If a colour changes there,
+   change it here and nowhere else: these three pages share this file so
+   the site can't drift into three slightly different creams.
+
+   /recipe/index.html deliberately does NOT use this file. That page is the
+   shared-recipe landing, it redirects to the App Store within two seconds,
+   and it must keep working if anything else on this domain breaks — so it
+   stays a single self-contained file with its own inline copy of the tokens. */
+
+:root {
+  /* The app is light-mode only — Info.plist pins UIUserInterfaceStyle to Light,
+     and the dark variants in the colorsets never resolve. Saying the same thing
+     here stops a dark-mode browser restyling its own furniture around a page
+     that is painting itself cream. */
+  color-scheme: light;
+
+  --paper:        #F5EEE1;  /* NomBackground */
+  --card:         #FCF8EC;  /* NomCard       */
+  --ink:          #3A342B;  /* NomInk        */
+  --accent:       #C7794F;  /* NomAccent, terracotta */
+  --accent-soft:  #EFDCC8;  /* NomAccentSoft */
+  --green:        #A9B295;  /* NomGreen, sage    */
+  --yellow:       #E7C05C;  /* NomYellow, mustard */
+  --muted:        #8C8471;  /* NomTextSecondary  */
+  --rule:         #D9D0BD;  /* NomSeparator      */
+
+  --stroke: 1.5px;          /* NomStroke.width */
+  --shadow: 3px 4px 0 rgba(58, 52, 43, .13);
+  --shadow-lift: 5px 7px 0 rgba(58, 52, 43, .16);
+
+  --hand: "Handlee", "Bradley Hand", "Segoe Print", cursive;
+  --body: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+
+  --wide: 68rem;
+  --text: 42rem;
+}
+
+/* The app's own English face, shipped here under the OFL rather than pulled
+   from a font CDN — the page promises no third-party requests, and a CDN is
+   one. `swap` so the words are readable before the 17 KB arrives. */
+@font-face {
+  font-family: "Handlee";
+  src: url("./fonts/Handlee-Regular.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+* { box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  * { animation: none !important; transition: none !important; }
+}
+
+body {
+  margin: 0;
+  background: var(--paper) url("./grain.png") repeat;
+  background-blend-mode: multiply;
+  color: var(--ink);
+  font: 17px/1.7 var(--body);
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+img { max-width: 100%; height: auto; display: block; }
+
+a { color: var(--accent); text-underline-offset: .18em; }
+a:hover { color: var(--ink); }
+
+/* Handlee is a delicate face: its caps measure 0.438 em where a normal Latin
+   face runs about 0.70, which is why every hand-set size here is a step or two
+   larger than the same thing would be in the body face. The app makes the same
+   correction in NomFonts.opticalScale. */
+h1, h2, h3, .hand { font-family: var(--hand); font-weight: 400; letter-spacing: .002em; }
+
+h1 { font-size: clamp(2.6rem, 7.5vw, 4.2rem); line-height: 1.08; margin: 0 0 1rem; }
+h2 { font-size: clamp(2rem, 4.6vw, 2.9rem); line-height: 1.15; margin: 0 0 .75rem; }
+h3 { font-size: 1.5rem; line-height: 1.25; margin: 0 0 .4rem; }
+
+p { margin: 0 0 1.1rem; }
+.lede { font-size: 1.22rem; line-height: 1.6; color: var(--ink); }
+.muted { color: var(--muted); }
+.small { font-size: .95rem; }
+
+/* ---------------------------------------------------------------- layout */
+
+.wrap { max-width: var(--wide); margin: 0 auto; padding: 0 1.25rem; }
+.narrow { max-width: var(--text); margin: 0 auto; padding: 0 1.25rem; }
+
+section { padding: 4.5rem 0; }
+@media (max-width: 40rem) { section { padding: 3.25rem 0; } }
+
+/* ------------------------------------------------------------------- nav */
+
+.nav {
+  position: sticky; top: 0; z-index: 40;
+  background: rgba(245, 238, 225, .92);
+  backdrop-filter: saturate(1.4) blur(10px);
+  -webkit-backdrop-filter: saturate(1.4) blur(10px);
+  border-bottom: var(--stroke) solid var(--rule);
+}
+.nav-inner {
+  max-width: var(--wide); margin: 0 auto; padding: .65rem 1.25rem;
+  display: flex; align-items: center; gap: 1.25rem;
+}
+.brand {
+  display: flex; align-items: center; gap: .55rem;
+  text-decoration: none; color: var(--ink); margin-right: auto;
+}
+.brand img { width: 34px; height: auto; }   /* never square: the mark is 0.980 w/h */
+.brand span { font-family: var(--hand); font-size: 1.75rem; line-height: 1; }
+.nav-links { display: flex; gap: 1.4rem; align-items: center; }
+.nav-links a {
+  font-family: var(--hand); font-size: 1.2rem; color: var(--ink);
+  text-decoration: none; border-bottom: 2px solid transparent; padding-bottom: 1px;
+}
+.nav-links a:hover { border-bottom-color: var(--accent); }
+@media (max-width: 54rem) { .nav-links { display: none; } }
+
+/* ----------------------------------------------------------- the buttons */
+
+/* Every filled control in the app is a capsule with the ink line drawn round
+   it and a hard offset shadow at radius 0 — no blur. That crispness is most of
+   what makes a flat colour read as paper rather than as a web button. */
+.btn {
+  display: inline-flex; align-items: center; gap: .5rem;
+  font-family: var(--hand); font-size: 1.25rem; line-height: 1;
+  padding: .8rem 1.6rem; border-radius: 999px;
+  border: var(--stroke) solid var(--ink);
+  text-decoration: none; cursor: pointer;
+  box-shadow: var(--shadow);
+  transition: transform .12s ease, box-shadow .12s ease;
+}
+.btn:hover { transform: translate(-1px, -2px); box-shadow: var(--shadow-lift); }
+.btn:active { transform: translate(1px, 2px); box-shadow: 1px 1px 0 rgba(58, 52, 43, .13); }
+.btn-primary { background: var(--accent); color: #fff; }
+.btn-primary:hover { color: #fff; }
+.btn-quiet { background: var(--card); color: var(--ink); }
+.btn-quiet:hover { color: var(--ink); }
+.btn-sm { font-size: 1.1rem; padding: .55rem 1.15rem; }
+
+/* ------------------------------------------------------ the App Store badge */
+
+/* Apple's own artwork, vendored at assets/vendor/app-store-badge.svg. It may
+   not be altered, so this styles the *link* around it and never the badge:
+   the padding is the clear space Apple's guidelines require (at least a tenth
+   of the badge's height on every side), and the hover only moves the link, the
+   way every other control here moves. No filter, no border, no shadow. */
+.badge {
+  display: inline-block; line-height: 0; padding: 6px;
+  border: 0; background: none; text-decoration: none;
+  transition: transform .12s ease;
+}
+.badge img { height: 54px; width: auto; }   /* Apple's floor is ~40px */
+.badge:hover { transform: translate(-1px, -2px); }
+.badge:active { transform: translate(1px, 2px); }
+.badge-sm img { height: 46px; }
+
+.cta-row {
+  display: flex; flex-wrap: wrap; gap: .85rem 1rem; align-items: center;
+}
+
+/* ------------------------------------------------------------- the chips */
+
+.chip {
+  display: inline-flex; align-items: center; gap: .4rem;
+  font-family: var(--hand); font-size: 1.05rem; line-height: 1;
+  padding: .42rem .85rem; border-radius: 999px;
+  border: var(--stroke) solid var(--ink); background: var(--card);
+  color: var(--ink);
+}
+.chip-sage { background: var(--green); color: var(--ink); }
+.chip-soft { background: var(--accent-soft); }
+.chip-sun  { background: var(--yellow); }
+.chips { display: flex; flex-wrap: wrap; gap: .5rem; margin: 1.1rem 0 0; padding: 0; list-style: none; }
+.chips li { margin: 0; }
+
+/* ------------------------------------------------------------- the cards */
+
+/* Hand-drawn corners: four different radii on each axis, so the rectangle is
+   never quite the same shape twice. It is the cheapest honest stand-in for the
+   app's wobbly pen, and it costs no filter and no SVG. */
+.card {
+  background: var(--card);
+  border: var(--stroke) solid var(--ink);
+  border-radius: 22px 18px 24px 20px / 20px 24px 18px 22px;
+  padding: 1.5rem 1.6rem;
+  box-shadow: var(--shadow);
+}
+.card-plain { box-shadow: none; }
+.card h3 { margin-top: 0; }
+.card p:last-child { margin-bottom: 0; }
+
+.grid { display: grid; gap: 1.25rem; }
+.grid-3 { grid-template-columns: repeat(3, 1fr); }
+.grid-2 { grid-template-columns: repeat(2, 1fr); }
+@media (max-width: 52rem) { .grid-3 { grid-template-columns: 1fr; } .grid-2 { grid-template-columns: 1fr; } }
+
+/* --------------------------------------------------------------- eyebrow */
+
+.eyebrow {
+  display: inline-block; font-family: var(--hand); font-size: 1.1rem;
+  color: var(--accent); margin: 0 0 .5rem;
+}
+
+/* ------------------------------------------------------------ the phones */
+
+/* The screenshots are raw 1242x2688 device captures, so the rounded case and
+   the ink line round it are drawn here rather than baked into the picture. */
+.phone {
+  border: 2px solid var(--ink);
+  border-radius: 2.2rem;
+  overflow: hidden;
+  background: var(--card);
+  box-shadow: var(--shadow-lift);
+  max-width: 300px;
+  width: 100%;
+}
+.phone img { border-radius: 2rem; }
+.phone-pair { display: flex; gap: 1rem; align-items: flex-start; }
+.phone-pair .phone:nth-child(2) { margin-top: 2.5rem; }
+@media (max-width: 30rem) {
+  .phone-pair { gap: .6rem; }
+  .phone-pair .phone:nth-child(2) { margin-top: 1.5rem; }
+}
+
+/* -------------------------------------------------------------- sketchy rule */
+
+.rule { border: 0; height: 8px; margin: 0; color: var(--rule); }
+.rule svg { width: 100%; height: 8px; display: block; }
+
+/* ---------------------------------------------------------------- footer */
+
+.foot {
+  border-top: var(--stroke) solid var(--rule);
+  padding: 2.5rem 0 3.5rem;
+  color: var(--muted); font-size: .97rem;
+}
+.foot a { color: var(--accent); }
+.foot-links { display: flex; flex-wrap: wrap; gap: .4rem 1.4rem; margin: 0 0 1rem; padding: 0; list-style: none; }
+.foot-links a { text-decoration: none; }
+.foot-links a:hover { text-decoration: underline; }
+
+/* --------------------------------------------------------- prose pages */
+
+/* support.html and privacy.html are long documents rather than landing pages;
+   they share the chrome above and set their own rhythm below it. */
+.prose { max-width: var(--text); margin: 0 auto; padding: 3rem 1.25rem 4rem; }
+.prose .tagline, .prose .date { color: var(--muted); margin: 0 0 2rem; }
+.prose .tagline { font-size: 1.15rem; }
+.prose .date { font-size: .95rem; }
+.prose .card { margin: 0 0 1.1rem; }
+.prose h1 { font-size: clamp(2.2rem, 6vw, 3rem); margin-bottom: .4rem; }
+.prose h2 {
+  font-size: 1.85rem; margin: 2.75rem 0 .75rem;
+  padding-top: 1.5rem; border-top: var(--stroke) solid var(--rule);
+}
+.prose h2:first-of-type { border-top: 0; padding-top: 0; }
+.prose .q { font-family: var(--hand); font-size: 1.3rem; margin: 1.9rem 0 .1rem; }
+.prose .q + p { margin-top: 0; }
+.prose ul { padding-left: 1.15rem; }
+.prose li { margin: .35rem 0; }
+
+/* ---------------------------------------------------------------- a11y */
+
+.skip {
+  position: absolute; left: -9999px; top: 0;
+  background: var(--card); color: var(--ink); padding: .75rem 1rem;
+  border: var(--stroke) solid var(--ink); border-radius: 0 0 12px 0; z-index: 60;
+}
+.skip:focus { left: 0; }
+
+:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; border-radius: 4px; }

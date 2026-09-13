@@ -1,0 +1,9 @@
+# nombook.app
+User-agent: *
+Allow: /
+
+# Shared-recipe links are private, unlisted, and carry a CloudKit token in the
+# path. They are already `noindex`; there is nothing there for a crawler to do.
+Disallow: /recipe/
+
+Sitemap: https://www.nombook.app/sitemap.xml

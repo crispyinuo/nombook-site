@@ -3,127 +3,946 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Nombook — your own little cookbook</title>
-<meta name="description" content="A cozy little recipe diary for iPhone. Write down what you cook, log every time you make it, and keep it all private.">
-<link rel="canonical" href="https://nombook.app/">
+
+<title>Nombook — a free recipe book &amp; meal planner for iPhone</title>
+<meta name="description" content="Keep the recipes you actually cook, plan the week, shop from the list, and log how each one went. Every feature free — no account, no ads, no subscription.">
+<link rel="canonical" href="https://www.nombook.app/">
+<meta name="theme-color" content="#F5EEE1">
+
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Nombook">
-<meta property="og:title" content="Nombook — your own little cookbook">
-<meta property="og:description" content="A cozy little recipe diary for iPhone. No accounts, no ads, no tracking.">
-<meta property="og:url" content="https://nombook.app/">
-<!-- The card iMessage, WhatsApp and the rest unfurl this link into. It has to
-     be an absolute URL — a relative one is simply dropped by most of them —
-     and the width/height let a preview reserve the right shape before the
-     image has finished loading. -->
-<meta property="og:image" content="https://nombook.app/assets/og.png">
-<meta property="og:image:type" content="image/png">
+<meta property="og:title" content="Nombook — a free recipe book, meal planner & cooking diary">
+<meta property="og:description" content="Keep the recipes you actually cook, plan the week, shop from the list, and write down how it went. Every feature free. No account, no ads, no tracking.">
+<meta property="og:url" content="https://www.nombook.app/">
+<meta property="og:image" content="https://www.nombook.app/assets/og.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="The Nombook logo: a bowl and an open book drawn in one line.">
+<meta property="og:image:alt" content="The nombook mark beside the app's recipe shelf on an iPhone.">
 <meta name="twitter:card" content="summary_large_image">
-<link rel="icon" href="/favicon.ico" sizes="48x48">
-<link rel="icon" type="image/png" href="/assets/icon-32.png" sizes="32x32">
-<link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
-<meta name="theme-color" content="#F5EEE1">
+<meta name="twitter:title" content="Nombook — a free recipe book, meal planner & cooking diary">
+<meta name="twitter:description" content="Keep the recipes you actually cook. Every feature free, no account, nothing tracked.">
+<meta name="twitter:image" content="https://www.nombook.app/assets/og.png">
+
+<meta name="author" content="Yinuo Zhou">
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1">
+
+<!-- Apple's Smart App Banner. On an iPhone this puts an OPEN/GET row at the top
+     of the page, which is both the shortest path to the App Store and iOS
+     answering "is it installed" — a question no script can ask. -->
+<meta name="apple-itunes-app" content="app-id=6792402315">
+
+<link rel="icon" href="./favicon.ico" sizes="32x32 48x48">
+<link rel="icon" href="./assets/favicon-32.png" type="image/png" sizes="32x32">
+<link rel="icon" href="./assets/favicon.png" type="image/png" sizes="64x64">
+<link rel="apple-touch-icon" href="./assets/apple-touch-icon.png">
+<link rel="preload" href="./assets/fonts/Handlee-Regular.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="./assets/shots/hero.webp" as="image" type="image/webp" fetchpriority="high">
+<link rel="stylesheet" href="./assets/site.css">
+
 <style>
-  /* Same three tokens as support.html and privacy.html, so the site reads as
-     one thing. If the app's palette changes, change it in all three. */
-  :root { --paper:#F5EEE1; --ink:#3A342B; --accent:#C7794F; --muted:#7a7161; }
-  /* Handlee is the face the app sets the "nombook" wordmark in, in every
-     language, so the site sets the wordmark in it too. Served from here
-     rather than from a font CDN: a page that promises no tracking should not
-     hand a third party a request for every visit. OFL, licence beside it. */
-  @font-face {
-    font-family:"Handlee"; src:url("./assets/handlee-regular.ttf") format("truetype");
-    font-weight:400; font-style:normal; font-display:swap;
+  /* Page-specific layout. The shared tokens, buttons, chips, cards, phones and
+     footer all live in assets/site.css, which support.html and privacy.html
+     use too. Only the landing page needs what is below. */
+
+  /* ------------------------------------------------------------------ hero */
+  .hero { padding: 3.5rem 0 1rem; position: relative; overflow: hidden; }
+  .hero-grid {
+    display: grid; grid-template-columns: 1.05fr .95fr;
+    gap: 2.5rem; align-items: center;
   }
-  * { box-sizing:border-box; }
-  body {
-    margin:0; padding:3.5rem 1.25rem 5rem;
-    background:var(--paper); color:var(--ink);
-    font:17px/1.65 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  .hero h1 { margin-bottom: .75rem; }
+  .hero .lede { max-width: 32rem; }
+  .hero-shot { justify-self: center; position: relative; }
+  .hero-shot .phone { max-width: 330px; }
+  /* Two of the app's own dish drawings tucked behind the phone, which is what
+     stops a single screenshot from reading as a stock product shot. */
+  .hero-shot .phone { position: relative; z-index: 1; }
+  .hero-doodle { position: absolute; pointer-events: none; z-index: 0; opacity: .95; }
+  .hero-doodle.a { width: 128px; left: -104px; top: 8%; transform: rotate(-11deg); }
+  .hero-doodle.b { width: 112px; right: -88px; bottom: 14%; transform: rotate(9deg); }
+  @media (max-width: 56rem) {
+    .hero-grid { grid-template-columns: 1fr; text-align: center; }
+    .hero .lede, .hero .cta-row, .hero .trust { margin-left: auto; margin-right: auto; }
+    .hero .cta-row { justify-content: center; }
+    .hero-doodle.a { left: -46px; width: 96px; }
+    .hero-doodle.b { right: -40px; width: 86px; }
   }
-  main { max-width:42rem; margin:0 auto; }
-  header { text-align:center; margin-bottom:3rem; }
-  /* Mark and wordmark side by side, the same lockup the app's Kitchen header
-     draws. The app pairs a 76pt mark with a 40pt wordmark; the sizes below
-     keep that ratio, which is why the wordmark's number looks so large —
-     Handlee's letters only fill about half of their em box. */
-  .lockup { display:flex; align-items:center; justify-content:center; gap:.5rem; }
-  .lockup img { height:96px; width:auto; }
-  h1 {
-    font-family:"Handlee",-apple-system,BlinkMacSystemFont,sans-serif;
-    font-size:3.1rem; line-height:1; margin:0;
+  /* On a phone there is no margin either side of the shot to tuck a drawing
+     into, so half of each one was cut off by the page edge — which reads as a
+     broken image rather than as decoration. */
+  @media (max-width: 34rem) { .hero-doodle { display: none; } }
+  .trust {
+    font-family: var(--hand); font-size: 1.12rem; color: var(--muted);
+    margin: 1rem 0 0; max-width: 32rem;
   }
-  .tagline { color:var(--muted); font-size:1.2rem; margin:.75rem 0 2rem; }
-  .cta {
-    display:inline-block; background:var(--accent); color:#fff; text-decoration:none;
-    font-weight:600; padding:.85rem 1.75rem; border-radius:999px;
-    border:1.5px solid var(--ink);
+  .trust b { color: var(--ink); font-weight: 400; }
+
+  /* ------------------------------------------------------------- free band */
+  .free { background: var(--accent-soft); border-block: var(--stroke) solid var(--ink); }
+  .free h2 { text-align: center; }
+  .free .lede { text-align: center; max-width: 40rem; margin: 0 auto 2.25rem; }
+  .free .card { background: var(--card); text-align: center; }
+  .free .card .mark { width: 58px; height: 58px; margin: 0 auto .55rem; object-fit: contain; }
+  .free-note {
+    text-align: center; max-width: 38rem; margin: 2rem auto 0;
+    font-family: var(--hand); font-size: 1.25rem; line-height: 1.6;
   }
-  .cta:hover { filter:brightness(.95); }
-  h2 { font-size:1.2rem; margin:2.5rem 0 .5rem; }
-  .card { border:1.5px solid var(--ink); border-radius:14px; padding:1rem 1.15rem; background:#fffaf0; }
-  ul { padding-left:1.15rem; }
-  li { margin:.4rem 0; }
-  a { color:var(--accent); }
-  .links { display:flex; gap:1.5rem; flex-wrap:wrap; margin-top:.5rem; }
-  footer { margin-top:3.5rem; padding-top:1.25rem; border-top:1.5px solid rgba(58,52,43,.25); color:var(--muted); font-size:.95rem; }
+
+  /* -------------------------------------------------------------- features */
+  .feature { padding: 4rem 0; }
+  .feature + .feature { border-top: var(--stroke) solid var(--rule); }
+  .feature-grid {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 3rem; align-items: center;
+  }
+  .feature.rev .feature-grid > .feature-art { order: -1; }
+  .feature-art { display: flex; justify-content: center; }
+  .feature-text { max-width: 30rem; }
+  .feature-text p:last-of-type { margin-bottom: 0; }
+  @media (max-width: 56rem) {
+    .feature { padding: 3rem 0; }
+    .feature-grid { grid-template-columns: 1fr; gap: 2rem; }
+    .feature.rev .feature-grid > .feature-art { order: 0; }
+    .feature-text { max-width: none; }
+  }
+
+  /* Posters sit on paper rather than in a phone: they are pictures the app
+     renders for sharing, not screens. */
+  .poster {
+    border: var(--stroke) solid var(--ink); border-radius: 14px;
+    box-shadow: var(--shadow); background: var(--card);
+  }
+  .poster-pair { display: flex; gap: 1rem; align-items: flex-start; }
+  /* An <img> used directly as a flex item keeps `min-width: auto`, so it will
+     not shrink past its own width and widens the whole page on a phone — this
+     pair alone pushed the layout to 496px on a 375px screen. `flex` plus
+     `min-width: 0` is what lets them give way. */
+  .poster-pair .poster { flex: 0 1 230px; min-width: 0; }
+  .poster-pair .poster:nth-child(2) { margin-top: 2rem; }
+
+  /* ------------------------------------------------------- the full list */
+  .everything { background: var(--card); border-block: var(--stroke) solid var(--ink); }
+  .everything .head { text-align: center; max-width: 40rem; margin: 0 auto 2.5rem; }
+  .cols { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.25rem; }
+  @media (max-width: 52rem) { .cols { grid-template-columns: 1fr; } }
+  .cols h3 { font-size: 1.35rem; margin-bottom: .6rem; }
+  .ticks { list-style: none; margin: 0; padding: 0; }
+  .ticks li {
+    position: relative; padding: .18rem 0 .18rem 1.6rem;
+    font-size: 1rem; line-height: 1.45;
+  }
+  /* A drawn tick rather than a bullet: the app checks things off everywhere,
+     and a terracotta mark is the one accent this list needs. */
+  .ticks li::before {
+    content: "✓"; position: absolute; left: 0; top: .18rem;
+    color: var(--accent); font-family: var(--hand); font-size: 1.15rem;
+  }
+
+  /* ---------------------------------------------------------- what it isn't */
+  .isnt .card { max-width: 46rem; margin: 0 auto; }
+  .isnt ul { list-style: none; margin: 1rem 0 0; padding: 0; }
+  .isnt li { padding: .3rem 0 .3rem 1.7rem; position: relative; }
+  .isnt li::before {
+    content: "✗"; position: absolute; left: 0; top: .3rem;
+    color: var(--muted); font-family: var(--hand); font-size: 1.15rem;
+  }
+
+  /* ------------------------------------------------------------ hand-drawn */
+  .art { background: var(--accent-soft); border-block: var(--stroke) solid var(--ink); }
+  .art-head { text-align: center; max-width: 38rem; margin: 0 auto 2rem; }
+  .art-strip {
+    display: flex; flex-wrap: wrap; justify-content: center;
+    gap: .35rem 1.1rem; margin: 0 0 1.25rem;
+  }
+  .art-strip img { width: 86px; height: 86px; object-fit: contain; }
+  .art-strip.small img { width: 62px; height: 62px; }
+  .counts {
+    display: flex; flex-wrap: wrap; justify-content: center; gap: 1rem;
+    margin-top: 2rem; padding: 0; list-style: none;
+  }
+  .counts li {
+    background: var(--card); border: var(--stroke) solid var(--ink);
+    border-radius: 18px 14px 20px 16px / 16px 20px 14px 18px;
+    padding: .9rem 1.4rem; text-align: center; min-width: 9.5rem;
+    box-shadow: var(--shadow);
+  }
+  .counts b { display: block; font-family: var(--hand); font-size: 2rem; line-height: 1.1; }
+  .counts span { font-size: .95rem; color: var(--muted); }
+
+  /* --------------------------------------------------------------- privacy */
+  .privacy-grid { display: grid; grid-template-columns: 190px 1fr; gap: 2rem; align-items: center; }
+  @media (max-width: 46rem) {
+    .privacy-grid { grid-template-columns: 1fr; text-align: center; }
+    .privacy-grid img { margin: 0 auto; max-width: 160px; }
+  }
+
+  /* ------------------------------------------------------------------- faq */
+  .faq { max-width: 48rem; margin: 0 auto; }
+  .faq details {
+    border: var(--stroke) solid var(--ink);
+    border-radius: 18px 14px 20px 16px / 16px 20px 14px 18px;
+    background: var(--card); margin-bottom: .8rem; overflow: hidden;
+  }
+  .faq summary {
+    cursor: pointer; list-style: none; padding: 1rem 3rem 1rem 1.25rem;
+    font-family: var(--hand); font-size: 1.3rem; position: relative;
+  }
+  .faq summary::-webkit-details-marker { display: none; }
+  .faq summary::after {
+    content: "+"; position: absolute; right: 1.15rem; top: 50%;
+    transform: translateY(-50%); font-size: 1.7rem; color: var(--accent); line-height: 1;
+  }
+  .faq details[open] summary::after { content: "–"; }
+  .faq details[open] summary { border-bottom: var(--stroke) solid var(--rule); }
+  .faq .answer { padding: 1rem 1.25rem 1.15rem; }
+  .faq .answer p:last-child { margin-bottom: 0; }
+
+  /* -------------------------------------------------------------- last CTA */
+  .end { text-align: center; }
+  .end .card {
+    max-width: 44rem; margin: 0 auto; padding: 2.75rem 1.75rem;
+    background: var(--accent); color: #fff; border-color: var(--ink);
+  }
+  .end h2 { color: #fff; }
+  .end p { color: rgba(255, 255, 255, .92); max-width: 30rem; margin-inline: auto; }
+  .end .btn-quiet { background: var(--card); }
+  .end .cta-row { justify-content: center; margin-top: 1.5rem; }
+  .end .fine { font-family: var(--hand); font-size: 1.15rem; margin: 1.25rem 0 0; }
 </style>
 </head>
+
 <body>
-<main>
+<a class="skip" href="#main">Skip to content</a>
 
-<header>
-  <div class="lockup">
-    <img src="./assets/nombook-mark.png" width="314" height="320" alt="">
-    <h1>nombook</h1>
+<nav class="nav" aria-label="Main">
+  <div class="nav-inner">
+    <a class="brand" href="/">
+      <img src="./assets/mark.webp" alt="" width="256" height="261" fetchpriority="high">
+      <span>nombook</span>
+    </a>
+    <div class="nav-links">
+      <a href="#what">What it does</a>
+      <a href="#free">Free</a>
+      <a href="#everything">Everything</a>
+      <a href="#privacy">Privacy</a>
+      <a href="#faq">FAQ</a>
+      <a href="./support.html">Support</a>
+    </div>
+    <a class="btn btn-primary btn-sm" href="https://apps.apple.com/app/id6792402315">Get it free</a>
   </div>
-  <p class="tagline">your own little cookbook</p>
-  <a class="cta" href="https://apps.apple.com/app/id6792402315">Get it on the App Store</a>
-</header>
+</nav>
 
-<div class="card">
-  <p>Nombook is a recipe <strong>diary</strong>. Write down the dishes you actually
-  cook — a photo or one of the hand-drawn covers, the ingredients, the steps —
-  then log each time you make it and how it turned out.</p>
-  <p>It is not a discovery app and it is not a social network. It is your
-  cookbook, kept on your phone.</p>
+<main id="main">
+
+<!-- ------------------------------------------------------------------ hero -->
+<section class="hero">
+  <div class="wrap hero-grid">
+    <div>
+      <p class="eyebrow">A cozy little recipe diary for iPhone</p>
+      <h1>Your own little cookbook.</h1>
+      <p class="lede">Nombook is a <strong>recipe keeper, meal planner and cooking diary</strong>
+        in one. Save the dishes you actually cook, plan the week, shop from the
+        list, cook with a timer in the step — and write down how it went.</p>
+      <div class="cta-row">
+<a class="badge" href="https://apps.apple.com/app/id6792402315">
+          <img src="./assets/vendor/app-store-badge.svg" alt="Download on the App Store"
+               width="120" height="40" loading="eager">
+        </a>
+        <a class="btn btn-quiet" href="#what">See what it does</a>
+      </div>
+      <p class="trust"><b>Free</b> — every feature &nbsp;·&nbsp; <b>No account</b> to make
+        &nbsp;·&nbsp; <b>Nothing tracked</b></p>
+    </div>
+
+    <div class="hero-shot">
+      <img class="hero-doodle a" src="./assets/dishes/ramen.webp" alt="" width="180" height="180">
+      <img class="hero-doodle b" src="./assets/dishes/dumplings.webp" alt="" width="180" height="180">
+      <div class="phone">
+        <img src="./assets/shots/hero.webp" width="760" height="1645"
+             alt="The Nombook recipe shelf: a grid of cards, each with a hand-drawn dish, its name, cuisine, cooking time and how many times it has been cooked."
+             fetchpriority="high">
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="rule" aria-hidden="true">
+  <svg viewBox="0 0 1200 10" preserveAspectRatio="none" fill="none">
+    <path d="M0 5.6C90 2.4 150 7.2 240 4.8S390 1.8 480 5.4 630 8.6 720 5 870 2 960 5.8s150 1.4 240-1.2"
+          stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+  </svg>
 </div>
 
-<h2>What it does</h2>
-<ul>
-  <li><strong>Write a recipe</strong> by hand, from a photo of a cookbook page, from a pasted block of text, or from a link.</li>
-  <li><strong>Cook from it</strong> in a full-screen mode that keeps the screen awake, with a timer on any step that needs one.</li>
-  <li><strong>Keep a diary</strong> — every cook, with a star rating, a note and photos of how it came out.</li>
-  <li><strong>Plan the week</strong> and build a shopping list from the ingredients.</li>
-  <li><strong>Find something to cook</strong> from what is actually in the fridge.</li>
-  <li><strong>Send a recipe to a friend</strong> as a link. They keep their own copy.</li>
-</ul>
+<!-- ------------------------------------------------------------ free band -->
+<section class="free" id="free">
+  <div class="wrap">
+    <h2>Free. All of it.</h2>
+    <p class="lede">There is no Plus tier, no recipe limit, and no paywall waiting in the
+      middle of a feature. What you install is the whole app.</p>
 
-<h2>Private by default</h2>
-<div class="card">
-  <p>No accounts, no sign-up, no password. No ads, no subscriptions, no tracking.
-  There is no Nombook server: your cookbook lives on your iPhone, and — if you
-  leave iCloud Sync on — in <em>your</em> private iCloud, which we cannot read.</p>
-  <p>Read the <a href="./privacy.html">privacy policy</a>.</p>
+    <div class="grid grid-3">
+      <div class="card">
+        <img class="mark" src="./assets/icons/IconCookbook.webp" alt="" width="160" height="160" loading="lazy" decoding="async">
+        <h3>No subscription</h3>
+        <p class="muted">No monthly plan, no lifetime unlock, no in-app purchases.
+          Sync, sharing, the planner and the scanner are simply part of it.</p>
+      </div>
+      <div class="card">
+        <img class="mark" src="./assets/icons/IconProfile.webp" alt="" width="160" height="160" loading="lazy" decoding="async">
+        <h3>No account</h3>
+        <p class="muted">No sign-up, no password, no email address. Open the app
+          and start writing — you're already in.</p>
+      </div>
+      <div class="card">
+        <img class="mark" src="./assets/icons/IconHeart.webp" alt="" width="160" height="160" loading="lazy" decoding="async">
+        <h3>No ads, no tracking</h3>
+        <p class="muted">No advertising, no analytics, no newsletter, no data
+          collected. There is nothing here that is selling you something.</p>
+      </div>
+    </div>
+
+    <p class="free-note">It's free because it was made for one kitchen first, and then
+      shared. Keep as many recipes as you like.</p>
+  </div>
+</section>
+
+<!-- ------------------------------------------------------------- features -->
+<div id="what">
+
+<section class="feature">
+  <div class="wrap feature-grid">
+    <div class="feature-text">
+      <p class="eyebrow">Adding a recipe</p>
+      <h2>However the recipe arrives.</h2>
+      <p>Typed out in your own words, pasted from a message, saved from a link, or
+        photographed straight off a cookbook page, a recipe card or your own
+        handwriting. Nombook reads it and fills in a draft.</p>
+      <p>Every import lands in a <strong>review screen first</strong>, so anything it got
+        wrong you fix before it joins your cookbook. Photo scanning happens on your
+        device — the pictures don't go anywhere.</p>
+      <ul class="chips">
+        <li class="chip chip-soft">✍️ Write it yourself</li>
+        <li class="chip chip-soft">🔗 From a link</li>
+        <li class="chip chip-soft">📋 Paste some text</li>
+        <li class="chip chip-soft">📷 Scan a photo</li>
+      </ul>
+    </div>
+    <div class="feature-art">
+      <div class="phone-pair">
+        <div class="phone"><img src="./assets/shots/add.webp" width="620" height="1342" loading="lazy" decoding="async"
+          alt="The Add a Recipe sheet offering four ways in: write it myself, scan from a link, scan from a photo, paste some text."></div>
+        <div class="phone"><img src="./assets/shots/paste.webp" width="620" height="1342" loading="lazy" decoding="async"
+          alt="A block of pasted recipe text, with a Use This Text button underneath it."></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="feature rev">
+  <div class="wrap feature-grid">
+    <div class="feature-text">
+      <p class="eyebrow">Your shelf</p>
+      <h2>A cookbook that looks like yours.</h2>
+      <p>Give a recipe your own photo — one tap lifts the dish off its background —
+        or pick one of <strong>110+ hand-drawn covers</strong> and plate it. Everything is
+        drawn by hand, so the shelf looks like a book rather than a database.</p>
+      <p>Search it, filter by cuisine and dish type, star the ones you love, and
+        gather the rest into lists of your own. Each card carries how many times
+        you've made it.</p>
+      <ul class="chips">
+        <li class="chip">Search &amp; filters</li>
+        <li class="chip">Favourites</li>
+        <li class="chip">Your own lists</li>
+        <li class="chip">Cooked-count badges</li>
+      </ul>
+    </div>
+    <div class="feature-art">
+      <div class="phone"><img src="./assets/shots/kitchen.webp" width="620" height="1342" loading="lazy" decoding="async"
+        alt="A grid of recipe cards, each with a hand-drawn cover, a cuisine tag, a cooking time and a cooked count."></div>
+    </div>
+  </div>
+</section>
+
+<section class="feature">
+  <div class="wrap feature-grid">
+    <div class="feature-text">
+      <p class="eyebrow">At the stove</p>
+      <h2>Made for the middle of cooking.</h2>
+      <p>Cook mode shows <strong>one step at a time</strong>, big enough to read from across
+        the counter, and keeps the screen awake so you're not waking your phone
+        with a floury thumb.</p>
+      <p>Tick the ingredients before you start. Any step that needs a timer has one
+        right in it — it keeps running while you move on, and tells you when the
+        time is up, even if you've left the app.</p>
+      <ul class="chips">
+        <li class="chip chip-sage">Screen stays on</li>
+        <li class="chip chip-sage">Timers in the step</li>
+        <li class="chip chip-sage">Tick off ingredients</li>
+      </ul>
+    </div>
+    <div class="feature-art">
+      <div class="phone"><img src="./assets/shots/cookmode.webp" width="620" height="1342" loading="lazy" decoding="async"
+        alt="Full-screen cook mode showing step 1 of 3 with a large countdown timer at one minute eighteen."></div>
+    </div>
+  </div>
+</section>
+
+<section class="feature rev">
+  <div class="wrap feature-grid">
+    <div class="feature-text">
+      <p class="eyebrow">The diary</p>
+      <h2>Every cook, remembered.</h2>
+      <p>The useful part of a recipe is usually what happened after you saved it: the
+        change you made, the photo from last time, the note that says ten more
+        minutes in the oven.</p>
+      <p>Each time you cook, log it — <strong>half a star at a time</strong>, with a note and
+        photos of how it came out. The history stays with the recipe, dated, so
+        next time you can see exactly what you did.</p>
+      <ul class="chips">
+        <li class="chip chip-sun">★ Half-star ratings</li>
+        <li class="chip chip-sun">Notes &amp; photos</li>
+        <li class="chip chip-sun">Dated history</li>
+      </ul>
+    </div>
+    <div class="feature-art">
+      <div class="phone"><img src="./assets/shots/recipe.webp" width="620" height="1342" loading="lazy" decoding="async"
+        alt="A recipe page for Sunday Roast Chicken with its cover, servings and times, a Start Cooking button, and Recipe and Cook log tabs."></div>
+    </div>
+  </div>
+</section>
+
+<section class="feature">
+  <div class="wrap feature-grid">
+    <div class="feature-text">
+      <p class="eyebrow">The week</p>
+      <h2>Plan it. Then shop it.</h2>
+      <p>Put dishes on a calendar and see the week, the month or a whole year of home
+        cooking at a glance. Planning something you haven't written down yet is
+        fine — <strong>type the name</strong> and it's on the day.</p>
+      <p>Send a recipe's ingredients to the grocery list — all of them, or only the
+        ones you're missing. Items arrive <strong>grouped by aisle</strong>, and the same
+        ingredient from two recipes is added together instead of listed twice.</p>
+      <ul class="chips">
+        <li class="chip chip-soft">Week · month · year</li>
+        <li class="chip chip-soft">Grouped by aisle</li>
+        <li class="chip chip-soft">Duplicates merged</li>
+      </ul>
+    </div>
+    <div class="feature-art">
+      <div class="phone-pair">
+        <div class="phone"><img src="./assets/shots/plan.webp" width="620" height="1342" loading="lazy" decoding="async"
+          alt="A month calendar with a small plate of food drawn on each day that was cooked, and a tally of what was cooked underneath."></div>
+        <div class="phone"><img src="./assets/shots/grocery.webp" width="620" height="1342" loading="lazy" decoding="async"
+          alt="A grocery list with checkboxes, grouped into Produce, Dairy, Meat and Fish, and Pantry."></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="feature rev">
+  <div class="wrap feature-grid">
+    <div class="feature-text">
+      <p class="eyebrow">Tonight</p>
+      <h2>Cook what's in the fridge.</h2>
+      <p>Tap what you actually have — from <strong>200+ hand-drawn ingredients</strong>, plus
+        anything you've typed in yourself — and Nombook shows the recipes you can
+        make with it, and which ingredient of yours each one uses.</p>
+      <p>It's the answer to the half past six question, asked of your own cookbook
+        rather than the internet's.</p>
+    </div>
+    <div class="feature-art">
+      <div class="phone"><img src="./assets/shots/find.webp" width="620" height="1342" loading="lazy" decoding="async"
+        alt="The ingredient finder: garlic and egg picked from a grid of hand-drawn ingredients, with one matching recipe found."></div>
+    </div>
+  </div>
+</section>
+
+<section class="feature">
+  <div class="wrap feature-grid">
+    <div class="feature-text">
+      <p class="eyebrow">Sharing</p>
+      <h2>Send a recipe to a friend.</h2>
+      <p>Share a recipe as a link and whoever opens it in Nombook keeps
+        <strong>their own copy</strong> — ingredients, steps, photos and all. It's theirs from
+        that moment: their edits never touch yours, and yours never touch theirs.</p>
+      <p>Or share it as a picture. A recipe can be drawn as a full page, a notebook,
+        a step board or a card; a whole list becomes a <strong>menu</strong> — fine dining,
+        illustrated, cute or chalkboard — and that goes anywhere a picture goes.</p>
+      <ul class="chips">
+        <li class="chip">Send a link</li>
+        <li class="chip">Recipe posters</li>
+        <li class="chip">Menu layouts</li>
+      </ul>
+    </div>
+    <div class="feature-art">
+      <div class="poster-pair">
+        <img class="poster" src="./assets/poster-notebook.webp" width="560" height="1473" loading="lazy" decoding="async"
+          alt="A recipe drawn as a notebook page: the ingredients as little drawings with amounts, and numbered steps with photos.">
+        <img class="poster" src="./assets/menu-cute.webp" width="462" height="900" loading="lazy" decoding="async"
+          alt="A list of recipes drawn as a cute menu, each dish on a pastel card under a banner reading Favorite dishes.">
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="feature rev">
+  <div class="wrap feature-grid">
+    <div class="feature-text">
+      <p class="eyebrow">Looking back</p>
+      <h2>A year of home cooking.</h2>
+      <p>Your own page counts what you've kept, what you've cooked and what you've
+        starred, and holds the lists you've made — weeknight dinners, things to
+        bake, whatever you like.</p>
+      <p>The calendar keeps the rest: a month of small plates, a year ribbon, and a
+        tally of which cuisines and which kinds of dish you actually made.</p>
+    </div>
+    <div class="feature-art">
+      <div class="phone"><img src="./assets/shots/me.webp" width="620" height="1342" loading="lazy" decoding="async"
+        alt="A personal page counting favourites, recipes and cooks, above a set of recipe lists."></div>
+    </div>
+  </div>
+</section>
+
+</div><!-- /#what -->
+
+
+<!-- ------------------------------------------------- everything included -->
+<section class="everything" id="everything">
+  <div class="wrap">
+    <div class="head">
+      <p class="eyebrow">The whole list</p>
+      <h2>Everything that's included.</h2>
+      <p class="muted">Which is everything. There is no tier above this one.</p>
+    </div>
+
+    <div class="cols">
+      <div>
+        <h3>Getting a recipe in</h3>
+        <ul class="ticks">
+          <li>Write a recipe in your own words</li>
+          <li>Import from a recipe URL</li>
+          <li>Save a page from the in-app browser</li>
+          <li>Paste text from a message or your notes</li>
+          <li>Scan a cookbook page, a recipe card or your own handwriting</li>
+          <li>Several photos at once become one recipe</li>
+          <li>Review and edit every import before it saves</li>
+          <li>110+ hand-drawn dish and drink covers</li>
+          <li>Your own cover photo, background lifted off in one tap</li>
+          <li>200+ hand-drawn ingredients</li>
+          <li>Cuisine, dish type, servings, prep and cook time, calories</li>
+          <li>Secret notes on any recipe</li>
+        </ul>
+      </div>
+      <div>
+        <h3>Cooking and remembering</h3>
+        <ul class="ticks">
+          <li>Full-screen cook mode, one step at a time</li>
+          <li>The screen stays awake while you cook</li>
+          <li>A timer on any step, running in the background</li>
+          <li>Tick off ingredients as you go</li>
+          <li>Half-star ratings, out of five</li>
+          <li>A note and photos every time you cook it</li>
+          <li>Dated cooking history on every recipe</li>
+          <li>Cooked-count badges on the shelf</li>
+          <li>A month of small plates, and a whole year</li>
+          <li>A tally of the cuisines and dish types you actually made</li>
+        </ul>
+      </div>
+      <div>
+        <h3>Planning, finding, sharing</h3>
+        <ul class="ticks">
+          <li>Meal planner — week, month and year</li>
+          <li>Plan a dish by typing its name</li>
+          <li>Grocery list grouped by aisle</li>
+          <li>The same ingredient from two recipes added together</li>
+          <li>Find recipes from what's in the fridge</li>
+          <li>Search by recipe or by ingredient</li>
+          <li>Cuisine, dish type, favourite and cooked filters</li>
+          <li>Recipe lists you make yourself</li>
+          <li>Send a recipe as a link — they keep their own copy</li>
+          <li>Four recipe poster layouts, five menu layouts</li>
+          <li>iCloud sync across your own devices</li>
+          <li>English, 简体中文, 繁體中文, 日本語, 한국어, Español, Français</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ------------------------------------------------------------ the art -->
+<section class="art">
+  <div class="wrap">
+    <div class="art-head">
+      <p class="eyebrow">Drawn, not stock</p>
+      <h2>Every picture in here was drawn by hand.</h2>
+      <p class="muted">The covers, the ingredients, the tab bar, the little plate on a
+        planned day. If you never take a photo of your food, your cookbook still
+        looks like something.</p>
+    </div>
+
+    <div class="art-strip" aria-hidden="true">
+      <img src="./assets/dishes/ramen.webp" alt="" width="180" height="180" loading="lazy" decoding="async">
+      <img src="./assets/dishes/dumplings.webp" alt="" width="180" height="180" loading="lazy" decoding="async">
+      <img src="./assets/dishes/pizza.webp" alt="" width="180" height="180" loading="lazy" decoding="async">
+      <img src="./assets/dishes/taco.webp" alt="" width="180" height="180" loading="lazy" decoding="async">
+      <img src="./assets/dishes/sushi.webp" alt="" width="180" height="180" loading="lazy" decoding="async">
+      <img src="./assets/dishes/croissant.webp" alt="" width="180" height="180" loading="lazy" decoding="async">
+      <img src="./assets/dishes/shakshuka.webp" alt="" width="180" height="180" loading="lazy" decoding="async">
+      <img src="./assets/dishes/pancakes.webp" alt="" width="180" height="180" loading="lazy" decoding="async">
+      <img src="./assets/dishes/curry.webp" alt="" width="180" height="180" loading="lazy" decoding="async">
+      <img src="./assets/dishes/cake.webp" alt="" width="180" height="180" loading="lazy" decoding="async">
+    </div>
+    <div class="art-strip small" aria-hidden="true">
+      <img src="./assets/ingredients/garlic.webp" alt="" width="160" height="160" loading="lazy" decoding="async">
+      <img src="./assets/ingredients/tomato.webp" alt="" width="160" height="160" loading="lazy" decoding="async">
+      <img src="./assets/ingredients/lemon.webp" alt="" width="160" height="160" loading="lazy" decoding="async">
+      <img src="./assets/ingredients/egg.webp" alt="" width="160" height="160" loading="lazy" decoding="async">
+      <img src="./assets/ingredients/carrot.webp" alt="" width="160" height="160" loading="lazy" decoding="async">
+      <img src="./assets/ingredients/mushroom.webp" alt="" width="160" height="160" loading="lazy" decoding="async">
+      <img src="./assets/ingredients/butter.webp" alt="" width="160" height="160" loading="lazy" decoding="async">
+      <img src="./assets/ingredients/onion.webp" alt="" width="160" height="160" loading="lazy" decoding="async">
+      <img src="./assets/ingredients/basil.webp" alt="" width="160" height="160" loading="lazy" decoding="async">
+      <img src="./assets/ingredients/chili.webp" alt="" width="160" height="160" loading="lazy" decoding="async">
+    </div>
+
+    <ul class="counts">
+      <li><b>110+</b><span>hand-drawn covers</span></li>
+      <li><b>200+</b><span>ingredient drawings</span></li>
+      <li><b>7</b><span>languages</span></li>
+      <li><b>0</b><span>ads, fees and accounts</span></li>
+    </ul>
+  </div>
+</section>
+
+<!-- -------------------------------------------------------------- privacy -->
+<section id="privacy">
+  <div class="wrap">
+    <div class="card privacy-grid">
+      <img src="./assets/mascot.webp" alt="" width="420" height="420" loading="lazy" decoding="async">
+      <div>
+        <p class="eyebrow">Private by default</p>
+        <h2>Yours, on your devices, and nobody else's.</h2>
+        <p>There is no Nombook server and no Nombook account. Your cookbook lives on
+          your iPhone, and — with iCloud Sync left on — in <em>your</em> private iCloud,
+          which we cannot read. One Apple Account opens the same recipes on every
+          device you sign into.</p>
+        <p>Turn sync off and everything still works, kept on the device. Nothing is
+          collected, nothing is analysed, nothing is sold.</p>
+        <p class="small"><a href="./privacy.html">Read the privacy policy</a> &nbsp;·&nbsp;
+          <a href="./support.html">Help &amp; support</a></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="rule" aria-hidden="true">
+  <svg viewBox="0 0 1200 10" preserveAspectRatio="none" fill="none">
+    <path d="M0 5.6C90 2.4 150 7.2 240 4.8S390 1.8 480 5.4 630 8.6 720 5 870 2 960 5.8s150 1.4 240-1.2"
+          stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+  </svg>
 </div>
 
-<h2>Languages</h2>
-<p>English, 简体中文, 繁體中文, 日本語, 한국어, Español and Français. By default it follows your phone.</p>
 
-<h2>Requirements</h2>
-<p>iPhone running iOS 17 or later.</p>
+<!-- -------------------------------------------------------- what it isn't -->
+<section class="isnt">
+  <div class="wrap">
+    <div class="card">
+      <p class="eyebrow">Being clear about it</p>
+      <h2>What Nombook isn't.</h2>
+      <p>It's a cookbook and a diary for the food <em>you</em> cook. It is deliberately
+        not several other things:</p>
+      <ul>
+        <li><strong>Not a recipe discovery feed.</strong> There is no endless scroll of
+          other people's dinners, and nothing is recommended to you.</li>
+        <li><strong>Not a social network.</strong> No profiles, no followers, no likes.
+          The only thing you can send anybody is one recipe, on purpose.</li>
+        <li><strong>Not ad-supported.</strong> Nothing on any screen is sold, and there
+          is no analytics SDK deciding what to show you.</li>
+      </ul>
+      <p style="margin-top:1.1rem">If what you want is somewhere to keep the twelve
+        things you really make, and to remember how the last one went, that's the
+        whole idea.</p>
+    </div>
+  </div>
+</section>
 
-<h2>Help</h2>
-<p class="links">
-  <a href="./support.html">Help &amp; support</a>
-  <a href="./privacy.html">Privacy policy</a>
-  <a href="mailto:nombooksupport@gmail.com">nombooksupport@gmail.com</a>
-</p>
+<!-- ------------------------------------------------------------------ faq -->
+<section id="faq">
+  <div class="wrap">
+    <h2 style="text-align:center">Questions people ask</h2>
+    <p class="lede muted" style="text-align:center;max-width:36rem;margin:0 auto 2.25rem">
+      And if yours isn't here, <a href="mailto:nombooksupport@gmail.com">write to us</a> —
+      a person reads it.</p>
 
-<footer>Nombook is made by Yinuo Zhou.</footer>
+    <div class="faq">
+      <details>
+        <summary>Is Nombook really free?</summary>
+        <div class="answer"><p>Yes — the whole app. There are no subscriptions, no
+          in-app purchases, no limit on how many recipes you keep, and no feature
+          held back behind an unlock. No ads either.</p></div>
+      </details>
+
+      <details>
+        <summary>Do I need an account?</summary>
+        <div class="answer"><p>No. There is no sign-up, no password and no email
+          address to hand over. Open the app and start writing.</p></div>
+      </details>
+
+      <details>
+        <summary>Where are my recipes kept?</summary>
+        <div class="answer"><p>On your iPhone, in Nombook's own storage. With iCloud
+          Sync on they are also in your private iCloud database, so your devices stay
+          in step. There is no Nombook server — your cookbook is never sent to us.</p></div>
+      </details>
+
+      <details>
+        <summary>Will my recipes sync between my devices?</summary>
+        <div class="answer"><p>Yes. Devices signed in to the same Apple Account share
+          one cookbook, photos included. The iCloud Sync page in the app shows you
+          whether it's working and what has reached iCloud.</p></div>
+      </details>
+
+      <details>
+        <summary>Can I import a recipe from a website?</summary>
+        <div class="answer"><p>Paste the address, or browse to the page in the app and
+          tap <em>Use This Page</em>. Nombook reads the page and fills in a draft that you
+          check before saving. You can also scan a photo of a cookbook page, a recipe
+          card or your own handwriting — several pages at once come out as one recipe,
+          and the reading happens on your device.</p></div>
+      </details>
+
+      <details>
+        <summary>Can I share a recipe with someone who doesn't have the app?</summary>
+        <div class="answer"><p>Share it as a picture — a poster or a menu — and that
+          goes anywhere. A shared <em>link</em> needs Nombook to open it, and whoever opens
+          it keeps their own independent copy: their edits never change yours.</p></div>
+      </details>
+
+      <details>
+        <summary>Is there an Android version, or a website I can use?</summary>
+        <div class="answer"><p>Not today. Nombook is an iPhone app — it installs on
+          an iPad and runs there the way iPhone apps do, but it's designed for the
+          phone. It's built on Apple's own frameworks and on iCloud, which is a lot
+          of why there's no account to make and nothing to pay for.</p></div>
+      </details>
+
+      <details>
+        <summary>What happens if I delete the app?</summary>
+        <div class="answer"><p>The copy on that iPhone goes, local photos included. If
+          iCloud Sync was on, reinstalling under the same Apple Account downloads the
+          cookbook again. If it was off, you'd need a device backup.</p></div>
+      </details>
+
+      <details>
+        <summary>Why is it free? What's the catch?</summary>
+        <div class="answer"><p>There isn't one. Nombook was built for one kitchen
+          first and then shared, and it has no running costs to cover: there is no
+          Nombook server, because your cookbook lives on your phone and syncs
+          through your own iCloud. Nothing about you is collected, so there is
+          nothing to sell either.</p></div>
+      </details>
+
+      <details>
+        <summary>Does it work without an internet connection?</summary>
+        <div class="answer"><p>Yes. Writing, cooking, timers, planning, the grocery
+          list and your whole cookbook work offline — it's all on the phone. Only
+          three things need a connection: importing a recipe from a web page,
+          syncing with iCloud, and sharing a link.</p></div>
+      </details>
+
+      <details>
+        <summary>Can I organise my recipes into collections?</summary>
+        <div class="answer"><p>Make as many lists as you like — weeknight dinners,
+          things to bake, whatever you want — give each one a cover and a sticker,
+          and put a recipe in more than one. There's a favourites heart as well, and
+          filters for cuisine, dish type, and whether you've actually cooked it yet.
+          You can search by recipe name or by an ingredient.</p></div>
+      </details>
+
+      <details>
+        <summary>Which languages does it speak?</summary>
+        <div class="answer"><p>English, 简体中文, 繁體中文, 日本語, 한국어, Español and
+          Français — the whole app, including the ingredient names and the units. By
+          default it follows your phone.</p></div>
+      </details>
+
+      <details>
+        <summary>What do I need to run it?</summary>
+        <div class="answer"><p>An iPhone running iOS 17 or later. iCloud sync is
+          optional; with it switched off everything still works, kept on the
+          device.</p></div>
+      </details>
+    </div>
+  </div>
+</section>
+
+<!-- ------------------------------------------------------------- last CTA -->
+<section class="end">
+  <div class="wrap">
+    <div class="card">
+      <h2>Start your cookbook tonight.</h2>
+      <p>Write down the thing you already know how to make. That's the first page.</p>
+      <div class="cta-row">
+<a class="badge" href="https://apps.apple.com/app/id6792402315">
+          <img src="./assets/vendor/app-store-badge.svg" alt="Download on the App Store"
+               width="120" height="40" loading="eager">
+        </a>
+      </div>
+      <p class="fine">Free · No account · iPhone, iOS 17 or later</p>
+    </div>
+  </div>
+</section>
 
 </main>
+
+<footer class="foot">
+  <div class="wrap">
+    <ul class="foot-links">
+      <li><a href="./support.html">Help &amp; support</a></li>
+      <li><a href="./privacy.html">Privacy policy</a></li>
+      <li><a href="mailto:nombooksupport@gmail.com">nombooksupport@gmail.com</a></li>
+      <li><a href="https://apps.apple.com/app/id6792402315">App Store</a></li>
+    </ul>
+    <p>Nombook is made by Yinuo Zhou. Hand-drawn in a real kitchen.<br>
+      <span class="small">Apple, the Apple logo, iPhone, iPad, iCloud and App&nbsp;Store are
+      trademarks of Apple Inc., registered in the U.S. and other countries.</span></p>
+  </div>
+</footer>
+
+<!-- Structured data. The application entry is what a search result for a free
+     recipe app is built from; the FAQ entry is what lets those questions appear
+     under it. Both describe exactly what is on the page above — nothing here is
+     a claim the page doesn't make. -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "SoftwareApplication",
+      "name": "Nombook",
+      "alternateName": "Nombook: Recipe Keeper & Diary",
+      "applicationCategory": "LifestyleApplication",
+      "applicationSubCategory": "Food & Drink",
+      "operatingSystem": "iOS 17.0 or later",
+      "url": "https://www.nombook.app/",
+      "downloadUrl": "https://apps.apple.com/app/id6792402315",
+      "installUrl": "https://apps.apple.com/app/id6792402315",
+      "image": "https://www.nombook.app/assets/og.png",
+      "screenshot": [
+        "https://www.nombook.app/assets/shots/kitchen.webp",
+        "https://www.nombook.app/assets/shots/recipe.webp",
+        "https://www.nombook.app/assets/shots/cookmode.webp",
+        "https://www.nombook.app/assets/shots/plan.webp",
+        "https://www.nombook.app/assets/shots/grocery.webp",
+        "https://www.nombook.app/assets/shots/find.webp"
+      ],
+      "keywords": "recipe app, recipe book, digital cookbook, recipe organizer, recipe manager, meal planner, meal planning, grocery list, shopping list, cooking diary, recipe keeper, recipe scanner, free recipe app, no subscription",
+      "inLanguage": ["en", "zh-Hans", "zh-Hant", "ja", "ko", "es", "fr"],
+      "description": "A free recipe book, meal planner and cooking diary for iPhone. Save recipes by hand, from a link, from pasted text or from a photo; plan the week; build a grocery list; cook with timers; and log every cook with a rating, a note and photos. No account, no ads, no subscription.",
+      "featureList": [
+        "Save recipes by hand, from a link, from pasted text or by scanning a photo",
+        "Full-screen cook mode with per-step timers that keep running in the background",
+        "Cooking diary: half-star ratings, notes and photos for every cook",
+        "Meal planner with week, month and year views",
+        "Grocery list grouped by aisle, with duplicate ingredients merged",
+        "Find recipes from the ingredients you already have",
+        "Share a recipe as a link, a poster or a menu",
+        "110+ hand-drawn dish covers and 200+ hand-drawn ingredients",
+        "iCloud sync through your own Apple Account"
+      ],
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD",
+        "availability": "https://schema.org/InStock"
+      },
+      "isAccessibleForFree": true,
+      "author": { "@type": "Person", "name": "Yinuo Zhou" },
+      "publisher": { "@type": "Person", "name": "Yinuo Zhou" },
+      "softwareHelp": "https://www.nombook.app/support.html",
+      "privacyPolicy": "https://www.nombook.app/privacy.html"
+    },
+    {
+      "@type": "WebSite",
+      "name": "Nombook",
+      "url": "https://www.nombook.app/",
+      "inLanguage": "en",
+      "description": "A free recipe book, meal planner and cooking diary for iPhone.",
+      "publisher": { "@type": "Person", "name": "Yinuo Zhou" }
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Is Nombook really free?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Yes — the whole app. There are no subscriptions, no in-app purchases, no limit on how many recipes you keep, and no feature held back behind an unlock. No ads either." }
+        },
+        {
+          "@type": "Question",
+          "name": "Do I need an account?",
+          "acceptedAnswer": { "@type": "Answer", "text": "No. There is no sign-up, no password and no email address to hand over. Open the app and start writing." }
+        },
+        {
+          "@type": "Question",
+          "name": "Where are my recipes kept?",
+          "acceptedAnswer": { "@type": "Answer", "text": "On your iPhone, in Nombook's own storage. With iCloud Sync on they are also in your private iCloud database, so your devices stay in step. There is no Nombook server — your cookbook is never sent to us." }
+        },
+        {
+          "@type": "Question",
+          "name": "Will my recipes sync between my devices?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Yes. Devices signed in to the same Apple Account share one cookbook, photos included. The iCloud Sync page in the app shows whether it is working and what has reached iCloud." }
+        },
+        {
+          "@type": "Question",
+          "name": "Can I import a recipe from a website?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Paste the address, or browse to the page in the app and tap Use This Page. Nombook reads the page and fills in a draft that you check before saving. You can also scan a photo of a cookbook page, a recipe card or your own handwriting; the reading happens on your device." }
+        },
+        {
+          "@type": "Question",
+          "name": "Can I share a recipe with someone who doesn't have the app?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Share it as a picture — a poster or a menu — and that goes anywhere. A shared link needs Nombook to open it, and whoever opens it keeps their own independent copy, so their edits never change yours." }
+        },
+        {
+          "@type": "Question",
+          "name": "Is there an Android version, or a website I can use?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Not today. Nombook is an iPhone app — it installs on an iPad and runs there the way iPhone apps do, but it is designed for the phone. It is built on Apple's own frameworks and on iCloud, which is a lot of why there is no account to make and nothing to pay for." }
+        },
+        {
+          "@type": "Question",
+          "name": "What happens if I delete the app?",
+          "acceptedAnswer": { "@type": "Answer", "text": "The copy on that iPhone goes, local photos included. If iCloud Sync was on, reinstalling under the same Apple Account downloads the cookbook again. If it was off, you would need a device backup." }
+        },
+        {
+          "@type": "Question",
+          "name": "Why is Nombook free? What is the catch?",
+          "acceptedAnswer": { "@type": "Answer", "text": "There isn't one. Nombook was built for one kitchen first and then shared, and it has no running costs to cover: there is no Nombook server, because your cookbook lives on your phone and syncs through your own iCloud. Nothing about you is collected, so there is nothing to sell either." }
+        },
+        {
+          "@type": "Question",
+          "name": "Does Nombook work without an internet connection?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Yes. Writing, cooking, timers, planning, the grocery list and your whole cookbook work offline — it is all on the phone. Only three things need a connection: importing a recipe from a web page, syncing with iCloud, and sharing a link." }
+        },
+        {
+          "@type": "Question",
+          "name": "Can I organise my recipes into collections?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Make as many lists as you like — weeknight dinners, things to bake, whatever you want — give each one a cover and a sticker, and put a recipe in more than one. There is a favourites heart as well, and filters for cuisine, dish type, and whether you have actually cooked it yet. You can search by recipe name or by an ingredient." }
+        },
+        {
+          "@type": "Question",
+          "name": "Which languages does Nombook speak?",
+          "acceptedAnswer": { "@type": "Answer", "text": "English, Simplified Chinese, Traditional Chinese, Japanese, Korean, Spanish and French — the whole app, including ingredient names and units. By default it follows your phone." }
+        },
+        {
+          "@type": "Question",
+          "name": "What do I need to run Nombook?",
+          "acceptedAnswer": { "@type": "Answer", "text": "An iPhone running iOS 17 or later. iCloud sync is optional; with it switched off everything still works, kept on the device." }
+        }
+      ]
+    }
+  ]
+}
+</script>
+
 </body>
 </html>
