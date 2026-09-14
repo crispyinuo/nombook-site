@@ -44,7 +44,7 @@
 <main id="main" class="prose">
 
 <h1>Nombook Privacy Policy</h1>
-<p class="date">Last updated: 9 September 2026</p>
+<p class="date">Last updated: 14 September 2026</p>
 
 <p>Nombook is a private recipe diary that stores its working copy on your device and, when iCloud sync is enabled, in your private iCloud database. This policy explains what that means in practice.</p>
 
@@ -59,12 +59,13 @@
   <li><strong>Cooking history</strong> — the days you cooked something, your notes about it and your star ratings</li>
   <li><strong>Planning and shopping</strong> — planned meals and your grocery list</li>
   <li><strong>Preferences</strong> — the name you chose to be greeted by, your language, and small display settings such as whether the Kitchen shows a grid or a list</li>
+  <li><strong>Anything you import</strong> — when you bring in a recipe from a web page or a post, the text it showed, the address it came from, and any picture Nombook downloaded with it are kept in your own cookbook, the same as a recipe you typed. A downloaded picture is never included when you share that recipe with somebody</li>
 </ul>
 <p>CloudKit stores synchronized data in the private database belonging to your iCloud account. Apple says private-database data is accessible only to the user by default and is not visible in the developer portal. It counts against your iCloud storage quota. You can turn cookbook sync off in Nombook's iCloud Sync settings; that keeps the local copy and stops this device from making new sync changes after the app restarts. Data already in iCloud remains available to your other devices.</p>
 <p>The app also synchronizes its language preference and your ordered cuisine and dish-type choices through Apple's iCloud key-value store. Nombook does not operate a server and does not receive any of this data.</p>
 
 <h2>Sharing a recipe</h2>
-<p>When you choose <strong>Send a link</strong> or <strong>Copy link</strong>, Nombook uploads a snapshot of that recipe to your private CloudKit database and asks Apple to create a read-only iCloud sharing link. The snapshot can include the recipe title, ingredients, steps, notes, photos, and the profile name you entered in Nombook. Anyone who has the link may be able to read that snapshot, so send it only to people you intend to share it with.</p>
+<p>When you choose <strong>Send a link</strong> or <strong>Copy link</strong>, Nombook uploads a snapshot of that recipe to your private CloudKit database and asks Apple to create a read-only iCloud sharing link. The snapshot can include the recipe title, ingredients, steps, notes, photos (except a picture Nombook downloaded when you imported the recipe from a web page or post, which stays private to you), and the profile name you entered in Nombook. Anyone who has the link may be able to read that snapshot, so send it only to people you intend to share it with.</p>
 <p>A recipient who opens the link saves an independent copy in their own cookbook and then leaves the CloudKit share. Later edits do not propagate to that copy. Sending the link again refreshes the snapshot. Deleting the original recipe asks CloudKit to remove its shared snapshot and stops the link from serving it; a copy somebody already saved is not removed.</p>
 
 <h2>Permissions Nombook may ask for</h2>
@@ -73,7 +74,7 @@
 <p><strong>Notifications.</strong> Optional, and requested only the first time you start a step timer. It exists so a timer can tell you when it's up while you're in another app or your phone is locked. All notifications are created and delivered locally by your device. If you decline, timers still run while Nombook is open, and the app says so on the timer.</p>
 
 <h2>When Nombook uses the network</h2>
-<p>Nombook uses the network for iCloud sync, recipe-link sharing, and when you ask it to read a recipe from the web. Web access happens if you paste a link or use the in-app browser to find a page and save it.</p>
+<p>Nombook uses the network for iCloud sync, recipe-link sharing, and when you ask it to read a recipe from the web. Web access happens if you paste a link, share a post or page to Nombook, or use the in-app browser to find a page and save it. Nombook reads only what that page shows without signing in, and does not download videos.</p>
 <p>In those cases your device contacts that website directly, the same way a web browser would. That website will see the ordinary things any website sees — your IP address, and the request for the page — and its own privacy policy governs what it does with that. Nombook sends nothing about you along with the request, keeps no record of what you visited, and the in-app browser uses a non-persistent session, so its cookies and cache are discarded when you close it.</p>
 <p>Nombook does not phone home or report that it was opened. It contains no analytics, crash-reporting, advertising, or tracking SDK.</p>
 
