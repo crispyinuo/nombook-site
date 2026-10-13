@@ -45,6 +45,12 @@
   .faq details { margin: .5rem 0; }
   .faq summary { cursor: pointer; font-weight: 600; }
   .faq p { margin: .4rem 0 0; color: var(--muted); }
+  .lang-suggest { display: flex; align-items: center; gap: .75rem; justify-content: center;
+    background: var(--card); border-bottom: var(--stroke) solid var(--ink);
+    padding: .55rem 1rem; font-size: .98rem; }
+  .lang-suggest a { font-weight: 600; }
+  .lang-suggest button { font: inherit; font-size: 1.2rem; line-height: 1; background: none; border: 0;
+    color: var(--muted); cursor: pointer; padding: .2rem .4rem; }
 </style>
 </head>
 <body>
@@ -69,7 +75,7 @@
 
 <main id="main" class="guide">
   <h1>How a Nombook household works</h1>
-  <p class="small muted"><a href="./zh-hans/family-kitchen.html" lang="zh-Hans">中文版</a></p>
+  <p class="small muted"><a href="./zh-hans/family-kitchen.html" lang="zh-Hans" data-lang="zh-Hans">中文版</a></p>
   <p class="tagline">One person starts a household and sends an invitation; the other taps it to join.
     From then on you share one cookbook, and every recipe says who added it. Here's Alex inviting Mia.</p>
 
@@ -122,5 +128,34 @@
       trademarks of Apple Inc., registered in the U.S. and other countries.</span></p>
   </div>
 </footer>
+<script>
+// Offers the guide in the visitor's language: the choice they made here before
+// (localStorage "nb-lang", the key the rest of the site uses), else the first of
+// their browser languages that is English or Chinese. A suggestion, never a
+// redirect, so nobody is moved against their will. No third-party script.
+(function () {
+  var KEY = "nb-lang", store = {
+    get: function () { try { return localStorage.getItem(KEY); } catch (e) { return null; } },
+    set: function (v) { try { localStorage.setItem(KEY, v); } catch (e) {} }
+  };
+  function family(l) { l = (l || "").toLowerCase(); return l.indexOf("zh") === 0 ? "zh" : l.indexOf("en") === 0 ? "en" : null; }
+  document.addEventListener("click", function (e) {
+    var a = e.target.closest && e.target.closest("[data-lang]");
+    if (a) store.set(a.getAttribute("data-lang"));
+  });
+  var want = family(store.get());
+  var prefs = navigator.languages || [navigator.language || ""];
+  for (var i = 0; i < prefs.length && !want; i++) want = family(prefs[i]);
+  if (want !== "zh") return;
+  var bar = document.createElement("div");
+  bar.className = "lang-suggest"; bar.lang = "zh-Hans";
+  bar.innerHTML = '<span></span><a data-lang="zh-Hans"></a><button type="button">\u00d7</button>';
+  bar.querySelector("span").textContent = "这个页面有中文版";
+  var a = bar.querySelector("a"); a.textContent = "查看中文版 →"; a.href = "./zh-hans/family-kitchen.html";
+  var b = bar.querySelector("button"); b.setAttribute("aria-label", "关闭");
+  b.onclick = function () { store.set("en"); bar.remove(); };
+  document.body.insertBefore(bar, document.body.firstChild);
+})();
+</script>
 </body>
 </html>
